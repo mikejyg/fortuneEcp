@@ -288,6 +288,9 @@ public:
 		this->showFilenameFlag = showFilenameFlag;
 	}
 
+	const std::string & getFilename() const {
+		return fortFile.getFilename();
+	}
 
 };
 

@@ -28,6 +28,8 @@ protected:
 
 	unsigned totalStrs;
 
+	bool showFilenameFlag;
+
 	////////////////////////////////////////////
 
 	/**
@@ -56,12 +58,13 @@ protected:
 
 public:
 	Fortune() : sLen(DEFAULT_SLEN)
-		, totalStrs(0)
+		, totalStrs(0), showFilenameFlag(false)
 	{}
 
 	void addFile(const std::string & filename) {
 		fortFiles.emplace_back(filename);
 		totalStrs += fortFiles.back().getNumStr();
+		fortFiles.back().setShowFilenameFlag(showFilenameFlag);
 	}
 
 	FortPositionType getFort(const int * seedPtr=nullptr) {
@@ -86,6 +89,15 @@ public:
 		return sLen;
 	}
 
+	void setShowFilenameFlag(bool showFilenameFlag) {
+		this->showFilenameFlag = showFilenameFlag;
+	}
+
+	void printFileList() const {
+		for (auto & fort : fortFiles) {
+			printf("%5.2f%% %s\n", (double)fort.getNumStr()/totalStrs*100, fort.getFilename().c_str());
+		}
+	}
 
 };
 

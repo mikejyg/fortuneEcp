@@ -18,8 +18,9 @@ namespace fortune {
 class DatFileTest {
 public:
 
-	static void test() {
-		DatFile datFile("datfiles/art");
+	static void test(const std::string & fortFilename) {
+		// print all messages from the file
+		DatFile datFile(fortFilename);
 
 		datFile.print(std::cout);
 		std::cout << std::endl;

@@ -1,1 +1,1 @@
-Debug/fortuneEcp $(cat datFileList)
+Debug/fortuneEcp -c $(cat datFileList)
