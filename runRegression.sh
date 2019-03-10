@@ -18,6 +18,10 @@ echo printAllZh.sh
 ./printAllZh.sh > t.log
 diff golden/printAllZh.log t.log || errorExit
 
+echo printAllBuiltIn.sh
+./printAllBuiltIn.sh > t.log
+diff golden/allBuiltIn.log t.log || errorExit
+
 rm t.log
 echo AOK.
 

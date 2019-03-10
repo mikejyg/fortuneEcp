@@ -15,18 +15,25 @@ A single item from a fortune cookie file.
 
 # Usage
 fortuneEcp options fortune_file ...
-options:
-        -t      Self tests, that prints out information of the fortune cookie files, and some any, short and long quotes from the files.
-        -c      Show the cookie file name from which the quote came from.
-        -f      Print out the list of files which would be searched, but don't print a fortune.
-        -m file_name    print out all messages from the specified file.
 
-fortuneEcp does NOT search for files, instead, arguments of file names are required. This way, user can select what fortune files to use. Please see the several .sh files as examples.
+Invoke fortuneEcp with no argument will print out the help message.
+
+NOTE: fortuneEcp does NOT search for files, as other fortune programs, instead, it relies on other Unix(**R**) utilities to do that for it. While a little more work, this provides the user more flexibility in selecting what fortune files to use. Please see the provided run scripts (.sh files) as examples.
+
+I have a weakness dealing with complex script files, so if someone is willing to provide a wrapper script called fortune, that provides compatibility with the other fortune programs, please, you are welcome.
+
+# Note on Short Long specification
+fortuneEcp will hang, if no fortune meets the short/long requirement, as it will keep trying to find one randomly.
 
 # Character encoding
-fortuneEcp is character encoding agnostic. It just outputs whatever is in the fortune file, according to the index file. It is assumed that the furtune file matches the character encoding of the system, so that it can be displayed correctly.
+fortuneEcp is character encoding **agnostic**. It just outputs whatever is in the fortune file, according to the index file. It is assumed that the furtune file **matches** the character encoding of the system, so that it can be displayed correctly.
 
-I understand that some data files might contain imperfections, and can use some work around - let the work around be implemented in the index generation tool.
+I understand that some data files might contain imperfections, and can use some work around - just let the work around be implemented in the index generation tool, or some other offline tools.
 
 *Yes, the index file must be accurate. Please contact me if you need a tool to generate accurate index files.*
+
+# Core dump
+Will fortuneEcp core dump? Yes, it will, because it is designed to do that, when things are not right, and in most cases, due to file access or integrity problems. I can certainly make it doesn't do that, but then it will not be a hobby anymore.
+
+Nontheless, please rest assured, it is well guarded against doing unreasonable things, like "(R) updating..." forever, or wipe out some of your files...
 

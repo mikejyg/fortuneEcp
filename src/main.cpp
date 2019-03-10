@@ -22,7 +22,7 @@ void printHelp() {
 	printf("\t-f\tPrint out the list of files which would be searched, but don't print a fortune.\n");
 //	printf("\t-l file_name_list\tUse filenames in the list file.\n");
 //	printf("\t-i\tread filenames from stdin.\n");
-	printf("\t-m file_name\tprint out all messages from the specified file.\n");
+	printf("\t-m\tprint out all messages from all fortune data files.\n");
 	printf("\t-s\tAlso use static (built-in) fortune data.\n");
 }
 
@@ -30,12 +30,12 @@ bool selfTest=false;
 bool printFileList = false;
 std::string fileList;
 bool readFilenames=false;
-std::string fortFilename;
+bool printAllStrings=false;
 bool useStaticFortData;
 
 void parseArgs(int argc, char * argv[], Fortune & fort) {
 	int c;
-	while ( (c = getopt (argc, argv, "tcfl:im:s")) != -1 )
+	while ( (c = getopt (argc, argv, "tcfl:ims")) != -1 )
 		switch (c)
 		{
 		case 't':
@@ -59,7 +59,7 @@ void parseArgs(int argc, char * argv[], Fortune & fort) {
 			break;
 
 		case 'm':
-			fortFilename = optarg;
+			printAllStrings = true;
 			break;
 
 		case 's':
@@ -88,7 +88,7 @@ void test(Fortune & fort) {
 }
 
 void addStaticFortData(Fortune & fort) {
-	fort.add(new FortDataStatic(art, art_len, art_dat, art_dat_len, "art"));
+	fort.add(new FortDataStatic(computers, computers_len, computers_dat, computers_dat_len, "computers"));
 }
 
 int main(int argc, char * argv[]) {
@@ -120,8 +120,8 @@ int main(int argc, char * argv[]) {
 
 	}
 
-	if (!fortFilename.empty()) {
-		DatFileTest::test(fortFilename);
+	if (printAllStrings) {
+		fort.printAllForts();
 		return 0;
 	}
 

@@ -25,13 +25,7 @@ public:
 		datFile.print(std::cout);
 		std::cout << std::endl;
 
-		for (auto i=0u; i<datFile.getNumStr(); i++) {
-			std::cout << i << ": ";
-
-			auto pos = datFile.getStringPosition(i);
-			//			std::cout << pos.first << ", " << pos.second << std::endl;
-			std::cout << datFile.getString(pos);
-		}
+		datFile.printAllStrings(std::cout);
 
 	}
 

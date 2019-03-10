@@ -93,6 +93,17 @@ public:
 		strm << ", delim: " << getDelim();
 	}
 
+	virtual void printAllStrings(std::ostream & strm) {
+		for (auto i=0u; i<getNumStr(); i++) {
+			std::cout << i << ": ";
+
+			auto pos = getStringPosition(i);
+			//			std::cout << pos.first << ", " << pos.second << std::endl;
+			strm << getString(pos);
+
+			strm << std::endl;
+		}
+	}
 
 };
 

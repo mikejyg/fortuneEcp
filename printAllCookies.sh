@@ -1,1 +1,2 @@
-for i in $(cat datFileList); do echo $i; Debug/fortuneEcp -m $i; done 
+#!/usr/bin/env bash
+for i in $(cat datFileList); do Debug/fortuneEcp -m $i; done 

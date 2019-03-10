@@ -111,6 +111,20 @@ public:
 		}
 	}
 
+	void printAllForts() const {
+		for (auto & datUptr : fortFiles) {
+			auto & datFile = *datUptr;
+
+			std::cout << "file: " << datFile.getFilename() << ">>>>" << std::endl;
+
+			datFile.print(std::cout);
+			std::cout << std::endl << std::endl;
+
+			datFile.printAllStrings(std::cout);
+		}
+
+	}
+
 };
 
 } /* namespace fortune */
