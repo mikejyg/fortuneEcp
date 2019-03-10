@@ -110,8 +110,6 @@ protected:
 
 	File fortFile;
 
-	bool showFilenameFlag;
-
 	////////////////////////////////
 
 	/*
@@ -141,9 +139,6 @@ protected:
 
 	    Utils::fseek(fortFile.getFp(), (long) begin);
 
-	    if (showFilenameFlag)
-	        printf ("(%s)\n%%\n", fortFile.getFilename().c_str());
-
 	    for ( auto Fort_len = 0; fgets((char *)line, sizeof line, fortFile.getFp()) != NULL &&
 	         ! isEndString(line); Fort_len++ )
 	    {
@@ -163,15 +158,6 @@ protected:
 	    fflush(stdout);
 	}
 
-public:
-	DatFile(const std::string & fortFilename) : datFile(fortFilename+".dat")
-		, fortFile(fortFilename)
-		, showFilenameFlag(false)
-	{
-		datFile.fopen();
-		readFromFile();
-	}
-
 	uint8_t getDelim() {
 		return stuff[0];	// delimiting character
 	}
@@ -181,32 +167,22 @@ public:
 	}
 
 	/**
-	 * Zero out the fields we care about in a tbl structure.
-	 */
-	void zero_tbl()
-	{
-		str_numstr = 0;
-		str_longlen = 0;
-		str_shortlen = (uint32_t)(-1);
-	}
-
-	/**
-	 * Merge with the tbl data of t2
-	 */
-	void add(const DatFile & t2)
-	{
-		str_numstr += t2.str_numstr;
-		if (str_longlen < t2.str_longlen)
-			str_longlen = t2.str_longlen;
-		if (str_shortlen > t2.str_shortlen)
-			str_shortlen = t2.str_shortlen;
-	}
-
-	/**
 	 * the size of the STR (header)
 	 */
 	static unsigned strSize() {
 		return 6 * sizeof(uint32_t);
+	}
+
+	unsigned getFlags() const {
+		return str_flags;
+	}
+
+public:
+	DatFile(const std::string & fortFilename) : datFile(fortFilename+".dat")
+		, fortFile(fortFilename)
+	{
+		datFile.fopen();
+		readFromFile();
 	}
 
 	/**
@@ -261,10 +237,6 @@ public:
 		return str_numstr;
 	}
 
-	unsigned getFlags() const {
-		return str_flags;
-	}
-
 	////////////////////////////////////////////////
 
 	void print(std::ostream & strm) const {
@@ -282,10 +254,6 @@ public:
 		strm << ")";
 
 		strm << ", delim: " << stuff[0];
-	}
-
-	void setShowFilenameFlag(bool showFilenameFlag) {
-		this->showFilenameFlag = showFilenameFlag;
 	}
 
 	const std::string & getFilename() const {

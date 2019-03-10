@@ -17,7 +17,7 @@ class Fortune {
 public:
 	static const unsigned DEFAULT_SLEN = 160;
 
-	// index of the fortune file, and the string position, determins where the fortune is.
+	// index of the fortune file, and the string position, determines where the fortune is.
 	typedef std::pair< unsigned, DatFile::StringPositionType > FortPositionType;
 
 protected:
@@ -64,7 +64,6 @@ public:
 	void addFile(const std::string & filename) {
 		fortFiles.emplace_back(filename);
 		totalStrs += fortFiles.back().getNumStr();
-		fortFiles.back().setShowFilenameFlag(showFilenameFlag);
 	}
 
 	FortPositionType getFort(const int * seedPtr=nullptr) {
@@ -78,6 +77,9 @@ public:
 	}
 
 	void display(FortPositionType & pos) {
+		if (showFilenameFlag) {
+			printf ("(%s)\n%%\n", fortFiles[pos.first].getFilename().c_str());
+		}
 		fortFiles[pos.first].displayString(pos.second);
 	}
 
