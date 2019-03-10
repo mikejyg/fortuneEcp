@@ -132,38 +132,17 @@ protected:
 		str_flags = ntohl(str_flags);
 	}
 
-	void display(unsigned begin)
-	{
-	    char *p, ch;
-	    char line[BUFSIZ];
-
-	    Utils::fseek(fortFile.getFp(), (long) begin);
-
-	    for ( auto Fort_len = 0; fgets((char *)line, sizeof line, fortFile.getFp()) != NULL &&
-	         ! isEndString(line); Fort_len++ )
-	    {
-	        if ( getFlags() & STR_ROTATED )
-	        {
-	            for (p = (char *)line; (ch = *p); ++p)
-	            {
-	                if (isupper(ch) && isascii(ch))
-	                    *p = 'A' + (ch - 'A' + 13) % 26;
-	                else if (islower(ch) && isascii (ch))
-	                    *p = 'a' + (ch - 'a' + 13) % 26;
-	            }
-	        }
-
-	        fputs((char *)line, stdout);
-	    }
-	    fflush(stdout);
+	void rotate(std::string & str) {
+		for (auto & ch : str) {
+			if (isupper(ch) && isascii(ch))
+				ch = 'A' + (ch - 'A' + 13) % 26;
+			else if (islower(ch) && isascii (ch))
+				ch = 'a' + (ch - 'a' + 13) % 26;
+		}
 	}
 
-	uint8_t getDelim() {
+	uint8_t getDelim() const {
 		return stuff[0];	// delimiting character
-	}
-
-	bool isEndString(const char * line) {
-		return ((line)[0] == getDelim() && (line)[1] == '\n');
 	}
 
 	/**
@@ -208,27 +187,43 @@ public:
 	unsigned fortlen(const StringPositionType & pos)
 	{
 	    int nchar;
-	    char line[BUFSIZ];
+//	    char line[BUFSIZ];
 
 	    if ( ! ( getFlags() & (STR_RANDOM | STR_ORDERED) ) )
 	        nchar = ( pos.second - pos.first ) - 2;  /* for %^J delimiter */
 	    else
 	    {
-	        Utils::fseek( fortFile.getFp(), pos.first);
-	        nchar = 0;
-	        while ( fgets(line, sizeof line, fortFile.getFp() ) != NULL &&
-	               ! isEndString(line) ) {
-	            nchar += strlen(line);
-	        }
+	    	// the following is not logically sound, deprecated
+
+	    	throw std::runtime_error("The STR (.dat) file should be re-generated so that the indexes are accurate.");
+
+//	        Utils::fseek( fortFile.getFp(), pos.first);
+//	        nchar = 0;
+//	        while ( fgets(line, sizeof line, fortFile.getFp() ) != NULL &&
+//	               ! isEndString(line) ) {
+//	            nchar += strlen(line);
+//	        }
 	    }
 	    return nchar;
 	}
 
-	void displayString(const StringPositionType & pos) {
+	std::string getString(const StringPositionType & pos)
+	{
 		if (!fortFile.getFp()) {
 			fortFile.fopen();
 		}
-		display(pos.first);
+	    Utils::fseek(fortFile.getFp(), pos.first);
+
+	    std::string str;
+	    auto len = fortlen(pos);
+	    str.resize(len);
+
+	    Utils::fread( (char *) str.data(), sizeof(char), len, fortFile.getFp() );
+
+	    if ( getFlags() & STR_ROTATED )
+	    	rotate(str);
+
+	    return str;
 	}
 
 	////////////////////////////////////////////////
@@ -253,7 +248,7 @@ public:
 			strm << " rotated";
 		strm << ")";
 
-		strm << ", delim: " << stuff[0];
+		strm << ", delim: " << getDelim();
 	}
 
 	const std::string & getFilename() const {

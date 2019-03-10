@@ -30,7 +30,7 @@ public:
 
 			auto pos = datFile.getStringPosition(i);
 			//			std::cout << pos.first << ", " << pos.second << std::endl;
-			datFile.displayString(pos);
+			std::cout << datFile.getString(pos);
 		}
 
 	}

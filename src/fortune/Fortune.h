@@ -80,7 +80,7 @@ public:
 		if (showFilenameFlag) {
 			printf ("(%s)\n%%\n", fortFiles[pos.first].getFilename().c_str());
 		}
-		fortFiles[pos.first].displayString(pos.second);
+		printf( "%s\n", fortFiles[pos.first].getString(pos.second).c_str() );
 	}
 
 	unsigned getFortLen(FortPositionType & pos) {

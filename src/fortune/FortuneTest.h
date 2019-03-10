@@ -30,7 +30,7 @@ public:
 			switch (type) {
 			case 0:
 				std::cout << "any: " << std::endl;
-				fort.getFort(&seed);
+				pos = fort.getFort(&seed);
 				seed++;
 				break;
 
