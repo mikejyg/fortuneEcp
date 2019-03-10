@@ -71,6 +71,7 @@
 #ifndef DATFILE_H_
 #define DATFILE_H_
 
+#include "FortDataIntf.h"
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
@@ -87,15 +88,13 @@ namespace fortune {
 /**
  * information table
  */
-class DatFile {
+class DatFile : public FortDataIntf {
 public:
 	static const int STRFILE_VERSION = 2;
 
 	static const int STR_RANDOM = 0x1;         /* randomized pointers */
 	static const int STR_ORDERED = 0x2;         /* ordered pointers */
 	static const int STR_ROTATED = 0x4;         /* rot-13'd text */
-
-	typedef std::pair<unsigned, unsigned> StringPositionType;		// a pair of position determines the string
 
 protected:
 
@@ -157,6 +156,8 @@ protected:
 	}
 
 public:
+	virtual ~DatFile() {}
+
 	DatFile(const std::string & fortFilename) : datFile(fortFilename+".dat")
 		, fortFile(fortFilename)
 	{
@@ -167,7 +168,7 @@ public:
 	/**
 	 * return the begin and end position of the string, of the furtune file
 	 */
-	StringPositionType getStringPosition(int stringIdx) {
+	virtual StringPositionType getStringPosition(int stringIdx) override {
 		StringPositionType pos;
 
 		auto offset = strSize() + stringIdx * sizeof(uint32_t);
@@ -184,7 +185,7 @@ public:
 	/**
 	 * get the length of the string
 	 */
-	unsigned fortlen(const StringPositionType & pos)
+	virtual unsigned fortlen(const StringPositionType & pos) override
 	{
 	    int nchar;
 //	    char line[BUFSIZ];
@@ -207,7 +208,7 @@ public:
 	    return nchar;
 	}
 
-	std::string getString(const StringPositionType & pos)
+	virtual std::string getString(const StringPositionType & pos) override
 	{
 		if (!fortFile.getFp()) {
 			fortFile.fopen();
@@ -228,13 +229,13 @@ public:
 
 	////////////////////////////////////////////////
 
-	unsigned getNumStr() const {
+	virtual unsigned getNumStr() const override {
 		return str_numstr;
 	}
 
 	////////////////////////////////////////////////
 
-	void print(std::ostream & strm) const {
+	virtual void print(std::ostream & strm) const override {
 		strm << "version: " << str_version;
 		strm << ", number of quotes: " << str_numstr;     /* # of strings in the file */
 		strm << ", longest length: " << str_longlen;        /* length of longest string */
@@ -251,7 +252,7 @@ public:
 		strm << ", delim: " << getDelim();
 	}
 
-	const std::string & getFilename() const {
+	virtual const std::string & getFilename() const override {
 		return fortFile.getFilename();
 	}
 

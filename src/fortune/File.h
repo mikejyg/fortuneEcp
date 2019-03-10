@@ -23,7 +23,7 @@ protected:
 	FILE * fp;
 
 public:
-	File(const std::string & filename) : filename(filename)
+	File(const std::string & filename="") : filename(filename)
 		, fp(nullptr)
 	{}
 

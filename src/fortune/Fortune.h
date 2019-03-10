@@ -8,8 +8,10 @@
 #ifndef FORTUNE_FORTUNE_H_
 #define FORTUNE_FORTUNE_H_
 
-#include "DatFile.h"
+#include "FortDataIntf.h"
 #include <vector>
+#include <memory>
+#include "DatFile.h"
 
 namespace fortune {
 
@@ -18,13 +20,13 @@ public:
 	static const unsigned DEFAULT_SLEN = 160;
 
 	// index of the fortune file, and the string position, determines where the fortune is.
-	typedef std::pair< unsigned, DatFile::StringPositionType > FortPositionType;
+	typedef std::pair< unsigned, FortDataIntf::StringPositionType > FortPositionType;
 
 protected:
 	// max length of short quotes
 	unsigned sLen;
 
-	std::vector<DatFile> fortFiles;
+	std::vector< std::unique_ptr<FortDataIntf> > fortFiles;
 
 	unsigned totalStrs;
 
@@ -44,12 +46,12 @@ protected:
 		for (fortFileIdx=0; fortFileIdx<fortFiles.size(); fortFileIdx++) {
 			auto & fortFile = fortFiles[fortFileIdx];
 
-			if ( idx < fortFile.getNumStr() ) {
-				pos.second = fortFile.getStringPosition(idx);
+			if ( idx < fortFile->getNumStr() ) {
+				pos.second = fortFile->getStringPosition(idx);
 				return pos;
 
 			} else {
-				idx -= fortFile.getNumStr();
+				idx -= fortFile->getNumStr();
 			}
 		}
 
@@ -62,8 +64,8 @@ public:
 	{}
 
 	void addFile(const std::string & filename) {
-		fortFiles.emplace_back(filename);
-		totalStrs += fortFiles.back().getNumStr();
+		fortFiles.emplace_back( new DatFile(filename) );
+		totalStrs += fortFiles.back()->getNumStr();
 	}
 
 	FortPositionType getFort(const int * seedPtr=nullptr) {
@@ -78,13 +80,13 @@ public:
 
 	void display(FortPositionType & pos) {
 		if (showFilenameFlag) {
-			printf ("(%s)\n%%\n", fortFiles[pos.first].getFilename().c_str());
+			printf ("(%s)\n%%\n", fortFiles[pos.first]->getFilename().c_str());
 		}
-		printf( "%s\n", fortFiles[pos.first].getString(pos.second).c_str() );
+		printf( "%s\n", fortFiles[pos.first]->getString(pos.second).c_str() );
 	}
 
 	unsigned getFortLen(FortPositionType & pos) {
-		return fortFiles[pos.first].fortlen(pos.second);
+		return fortFiles[pos.first]->fortlen(pos.second);
 	}
 
 	unsigned getSLen() const {
@@ -97,7 +99,7 @@ public:
 
 	void printFileList() const {
 		for (auto & fort : fortFiles) {
-			printf("%5.2f%% %s\n", (double)fort.getNumStr()/totalStrs*100, fort.getFilename().c_str());
+			printf("%5.2f%% %s\n", (double)fort->getNumStr()/totalStrs*100, fort->getFilename().c_str());
 		}
 	}
 
