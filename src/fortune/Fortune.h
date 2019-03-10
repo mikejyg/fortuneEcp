@@ -68,6 +68,14 @@ public:
 		totalStrs += fortFiles.back()->getNumStr();
 	}
 
+	/**
+	 * this takes ownership of fortData.
+	 */
+	void add(FortDataIntf * fortData) {
+		fortFiles.emplace_back(fortData);
+		totalStrs += fortFiles.back()->getNumStr();
+	}
+
 	FortPositionType getFort(const int * seedPtr=nullptr) {
 		if (seedPtr) {
 			srand(*seedPtr);

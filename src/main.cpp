@@ -9,6 +9,8 @@
 #include "fortune/Fortune.h"
 #include "fortune/FortuneTest.h"
 #include <unistd.h>
+#include "fortdata/fortData.h"
+#include "fortune/FortDataStatic.h"
 
 using namespace fortune;
 
@@ -21,6 +23,7 @@ void printHelp() {
 //	printf("\t-l file_name_list\tUse filenames in the list file.\n");
 //	printf("\t-i\tread filenames from stdin.\n");
 	printf("\t-m file_name\tprint out all messages from the specified file.\n");
+	printf("\t-s\tAlso use static (built-in) fortune data.\n");
 }
 
 bool selfTest=false;
@@ -28,10 +31,11 @@ bool printFileList = false;
 std::string fileList;
 bool readFilenames=false;
 std::string fortFilename;
+bool useStaticFortData;
 
 void parseArgs(int argc, char * argv[], Fortune & fort) {
 	int c;
-	while ( (c = getopt (argc, argv, "tcfl:im:")) != -1 )
+	while ( (c = getopt (argc, argv, "tcfl:im:s")) != -1 )
 		switch (c)
 		{
 		case 't':
@@ -58,6 +62,10 @@ void parseArgs(int argc, char * argv[], Fortune & fort) {
 			fortFilename = optarg;
 			break;
 
+		case 's':
+			useStaticFortData = true;
+			break;
+
 		case '?':
 			if (optopt == 'c')
 				fprintf (stderr, "Option -%c requires an argument.\n", optopt);
@@ -79,6 +87,10 @@ void test(Fortune & fort) {
 
 }
 
+void addStaticFortData(Fortune & fort) {
+	fort.add(new FortDataStatic(art, art_len, art_dat, art_dat_len, "art"));
+}
+
 int main(int argc, char * argv[]) {
 	if (argc<2) {
 		printHelp();
@@ -88,6 +100,10 @@ int main(int argc, char * argv[]) {
 	Fortune fort;
 
 	parseArgs(argc, argv, fort);
+
+	if (useStaticFortData) {
+		addStaticFortData(fort);
+	}
 
 	// add files on the command line
 	for (auto i = optind; i < argc; i++) {
