@@ -10,7 +10,7 @@
 
 #include "FortDataIntf.h"
 #include <cstring>
-#include <arpa/inet.h>
+#include "Utils.h"
 
 namespace fortune {
 
@@ -34,11 +34,11 @@ public:
 		, filename(filename)
 	{
 		auto * p = (uint32_t *)fortIdx;
-		str_version = ntohl(*p++);
-		str_numstr = ntohl(*p++);
-		str_longlen = ntohl(*p++);
-		str_shortlen = ntohl(*p++);
-		str_flags = ntohl(*p++);
+		str_version = Utils::ntohl(*p++);
+		str_numstr = Utils::ntohl(*p++);
+		str_longlen = Utils::ntohl(*p++);
+		str_shortlen = Utils::ntohl(*p++);
+		str_flags = Utils::ntohl(*p++);
 
 		memcpy(stuff, p, 4);
 	}
@@ -53,8 +53,8 @@ public:
 		pos.first = *p++;
 		pos.second = *p++;
 
-	    pos.first = ntohl( pos.first );
-	    pos.second = ntohl( pos.second );
+	    pos.first = Utils::ntohl( pos.first );
+	    pos.second = Utils::ntohl( pos.second );
 
 	    return pos;
 	}

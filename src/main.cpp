@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include "fortdata/fortData.h"
 #include "fortune/FortDataStatic.h"
+#include "fortdata/fortData.h"
 
 using namespace fortune;
 
@@ -85,10 +86,6 @@ void parseArgs(int argc, char * argv[], Fortune & fort) {
 void test(Fortune & fort) {
 	FortuneTest::testAllTypes(fort, 30);
 
-}
-
-void addStaticFortData(Fortune & fort) {
-	fort.add(new FortDataStatic(computers, computers_len, computers_dat, computers_dat_len, "computers"));
 }
 
 int main(int argc, char * argv[]) {

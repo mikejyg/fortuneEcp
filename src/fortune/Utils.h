@@ -61,6 +61,18 @@ public:
 		return r;
 	}
 
+#define swap32(x)                                        \
+  ((((x) & 0xff000000u) >> 24) | (((x) & 0x00ff0000u) >> 8)        \
+   | (((x) & 0x0000ff00u) << 8) | (((x) & 0x000000ffu) << 24))
+
+	static uint32_t ntohl(uint32_t x) {
+#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+		return swap32(x);
+#else
+		return x;
+#endif
+	}
+
 };
 
 } /* namespace fortune */

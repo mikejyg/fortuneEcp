@@ -76,7 +76,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <string>
-#include <arpa/inet.h>
+#include "Utils.h"
 #include <iostream>
 #include "Utils.h"
 #include <utility>
@@ -109,11 +109,11 @@ protected:
 		Utils::fread(&str_flags, sizeof str_flags, 1, datFile.getFp());
 		Utils::fread(&stuff, sizeof stuff, 1, datFile.getFp());
 
-		str_version = ntohl(str_version);
-		str_numstr = ntohl(str_numstr);
-		str_longlen = ntohl(str_longlen);
-		str_shortlen = ntohl(str_shortlen);
-		str_flags = ntohl(str_flags);
+		str_version = Utils::ntohl(str_version);
+		str_numstr = Utils::ntohl(str_numstr);
+		str_longlen = Utils::ntohl(str_longlen);
+		str_shortlen = Utils::ntohl(str_shortlen);
+		str_flags = Utils::ntohl(str_flags);
 	}
 
 public:
@@ -137,8 +137,8 @@ public:
 	    Utils::fread(& pos.first, sizeof(uint32_t), 1, datFile.getFp());
 	    Utils::fread(& pos.second, sizeof(uint32_t), 1, datFile.getFp());
 
-	    pos.first = ntohl( pos.first );
-	    pos.second = ntohl( pos.second );
+	    pos.first = Utils::ntohl( pos.first );
+	    pos.second = Utils::ntohl( pos.second );
 
 	    return pos;
 	}

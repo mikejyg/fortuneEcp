@@ -8,10 +8,12 @@
 #ifndef FORTDATA_FORTDATA_H_
 #define FORTDATA_FORTDATA_H_
 
-extern unsigned char computers[];
-extern unsigned computers_len;
+#include "../fortune/Fortune.h"
 
-extern unsigned char computers_dat[];
-extern unsigned computers_dat_len;
+namespace fortune {
+
+void addStaticFortData(fortune::Fortune & fort);
+
+} // namespace
 
 #endif /* FORTDATA_FORTDATA_H_ */

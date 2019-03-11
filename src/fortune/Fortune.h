@@ -12,6 +12,7 @@
 #include <vector>
 #include <memory>
 #include "DatFile.h"
+#include "TimeUtils.h"
 
 namespace fortune {
 
@@ -80,7 +81,7 @@ public:
 		if (seedPtr) {
 			srand(*seedPtr);
 		} else {
-			srand(time(nullptr));
+			srand(TimeUtils::time() * 100);
 		}
 
 		return getFortSeedSet();
